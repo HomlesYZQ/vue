@@ -1,0 +1,18 @@
+.thums{
+    display: flex;
+}
+.thums>div{
+    width: 100%;
+}
+.thums .my-gallery{
+    display: flex;
+    flex-wrap: wrap;
+}
+.thums .my-gallery figure{
+    margin: 10px;
+    box-shadow: 0 0 10px #ccc;
+}
+.thums .my-gallery figure img{
+    width: 100px;
+    vertical-align: middle;
+}
