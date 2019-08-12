@@ -1,6 +1,8 @@
 <template>
 <div class="goodsinfo-container">
-    <div class="ball"></div>
+    <transition @before-enter='beforeEnter' @enter='enter' @after-enter='afterEnter'>
+        <div class="ball" v-show="ballFlag" ref="ball"></div>
+    </transition>
     <div class="mui-card">
         <div class="mui-card-content">
             <div class="mui-card-content-inner">
@@ -17,11 +19,11 @@
 
                 </p>
                 <p>
-                    购买数量：<number></number>
+                    购买数量：<number @getcount='getselect' :max='slide2.stock_quantity'></number>
                 </p>
                 <p>
                     <mt-button type='primary' size='small'>立即购买</mt-button>
-                    <mt-button type='danger' size='small'>加入购物车</mt-button>
+                    <mt-button type='danger' size='small' @click="addToShopCar">加入购物车</mt-button>
                 </p>
             </div>
         </div>
@@ -58,7 +60,9 @@ export default {
         return {
             id:this.$route.params.id,
             slide1:[],
-            slide2:[]
+            slide2:[],
+            ballFlag:false,
+            selectcont:1
         }
     },
     components:{
@@ -96,6 +100,41 @@ export default {
         },
         goComment(id){
             this.$router.push({name:'Comment',params:{ id }});
+        },
+        addToShopCar(){
+            this.ballFlag=!this.ballFlag
+
+            var goodsinfo={
+                id:this.id,
+                count:this.selectcont,
+                pirce:this.slide2.sell_price,
+                selected:true
+            }
+            this.$store.commit('addtocar',goodsinfo)
+        },
+        beforeEnter(el){
+            el.style.transform='translate(0,0)'
+            el.style.opacity = 1;
+            // console.log(el)
+        },
+        enter(el,done){
+            el.offsetWidth;
+
+            const ballposition = this.$refs.ball.getBoundingClientRect();
+            const badgeposition = document.getElementById('badge').getBoundingClientRect()
+            const xDist = badgeposition.left - ballposition.left
+            const yDist = badgeposition.top - ballposition.top
+            el.style.transform=`translate(${xDist}px,${yDist}px)`;
+            el.style.transition="all .5s cubic-bezier(.4,-0.3,1,.68)"
+            // console.log(el)
+            el.addEventListener('transitionend',done)
+        },
+        afterEnter(el){
+            this.ballFlag=!this.ballFlag
+        },
+        getselect(count){
+            this.selectcont=count
+            console.log(this.selectcont)
         }
     },
     created() {
@@ -119,5 +158,15 @@ export default {
 }
 .mui-card-footer button{
     margin: 15px 0;
+}
+.ball{
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    border-radius: 50%;
+    z-index: 99;
+    background-color: red;
+    top: 390px;
+    left: 150px;
 }
 </style>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import './assets/mui/css/preview.css'
 // import { Header,Swipe, SwipeItem,Button,Lazyload } from 'mint-ui';
 import MintUI from 'mint-ui'
@@ -23,5 +24,6 @@ import '@/assets/mui/css/icons-extra.css'
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })
